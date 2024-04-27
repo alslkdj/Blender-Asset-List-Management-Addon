@@ -470,11 +470,13 @@ class GspreadPush (bpy.types.Operator):
             else:
                 all_objs = bpy.data.objects #모든 오브젝트 가져오기
                 all_objs = [other for other in all_objs if other.data is not obj.data] #현재 선택된 오브젝트와 동일한 오브젝트 거르기
-                all_objs = [other for other in all_objs if 'UUID' in other.data] #UUID 보유 오브젝트 거르기
+                #all_objs = [other for other in all_objs if 'UUID' in other.data] #UUID 보유 오브젝트 거르기
 
-                for other in all_objs:
-                    if obj.data['UUID'] == other.data['UUID']:
-                        obj.data['UUID'] = str(uuid4())
+                if len(all_objs) > 0 :
+                    for other in all_objs:
+                        if other.data is not None and 'UUID' in other.data: #메시가 아니라 거를 수 없는경우가 있음...
+                            if obj.data['UUID'] == other.data['UUID']:
+                                obj.data['UUID'] = str(uuid4())
 
         #UUID 값 시트에서 찾기. 있으면 그 열에 할당, 없으면 빈 열에 
         def findInSheet (obj) :
